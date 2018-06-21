@@ -46,37 +46,15 @@ namespace Tetris
             }
         }
 
-        float timer = 0;//下坠计时器
-
+        private float timer = 0;//下坠计时器
+        private float curGameSpeed;
 
         public void OnActivate()
         {
             rotateAnchor = transform.Find("Anchor");
             BricksManager.AddDropEvent(DestroySelf);
+            curGameSpeed = 1;
             //StartCoroutine(DropDown());
-        }
-
-        IEnumerator DropDown()
-        {
-            yield return new WaitForSeconds(DropSpeed);
-            BricksManager.Instance.ClearPreValue(transform);
-
-            if (BricksManager.Instance.CanDropDown(transform))
-            {
-                Vector3 nextPos = transform.position - new Vector3(0, 1, 0);
-                transform.position = nextPos;
-                CanDropDown = true;
-                BricksManager.Instance.UpdateGrid(transform);
-            }
-            else
-            {
-                //一下两行代码执行的顺序影响满行的判断，不能更改
-                BricksManager.Instance.UpdateGrid(transform);
-                CanDropDown = false;
-                yield break;
-            }
-
-            yield return DropDown();
         }
 
         void FreeDropDown()
@@ -136,11 +114,11 @@ namespace Tetris
 
             if (Input.GetKeyDown(InputManager.Down))
             {
-                DropSpeed = 0.1f;
+                DropSpeed = curGameSpeed*0.05f;
             }
             else if(Input.GetKeyUp(InputManager.Down))
             {
-                DropSpeed = 1;
+                DropSpeed = curGameSpeed;
             }
             FreeDropDown();
 
