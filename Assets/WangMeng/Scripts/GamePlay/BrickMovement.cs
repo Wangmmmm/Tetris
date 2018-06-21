@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace Tetris
 {
-
-
     public class BrickMovement : MonoBehaviour
     {
+
+        public Transform rotateAnchor;
 
         [SerializeField, SetProperty("MoveDistance")]
         private int _moveDistance;
@@ -48,6 +48,7 @@ namespace Tetris
 
         public void OnActivate()
         {
+            rotateAnchor = transform.Find("Anchor");
             StartCoroutine(DropDown());
             BricksManager.AddDropEvent(DestroySelf);
         }
@@ -123,7 +124,7 @@ namespace Tetris
                 Vector3 prePos = transform.position;
                 Vector3 preRot = transform.eulerAngles;
 
-                if (BricksManager.Instance.CanChangeShape(transform))
+                if (BricksManager.Instance.CanChangeShape(transform,rotateAnchor.position))
                 {
                     transform.eulerAngles = preRot;
                     transform.position = prePos;
@@ -142,8 +143,8 @@ namespace Tetris
         private void ChangeShape()
         {
             Vector3 prePos = transform.position;
-            transform.Rotate(Vector3.forward, 90, Space.World);
-            transform.position = prePos;
+            transform.RotateAround(rotateAnchor.position,Vector3.forward,90);
+            //transform.position = prePos;
         }
 
         private void DestroySelf()

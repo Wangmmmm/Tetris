@@ -62,6 +62,9 @@ namespace Tetris
         {
             foreach (Transform brick in bricks)
             {
+                if (brick.name == "Anchor")
+                    continue;
+
                 int nextY = Vector2Ex.GetInt(brick.position.y) - 1;
                 int curX = Vector2Ex.GetInt(brick.position.x);
 
@@ -83,6 +86,9 @@ namespace Tetris
         {
             foreach (Transform brick in bricks)
             {
+                if (brick.name == "Anchor")
+                    continue;
+
                 int curY = Vector2Ex.GetInt(brick.position.y);
                 int nextX = Vector2Ex.GetInt(brick.position.x) - 1;
 
@@ -94,19 +100,23 @@ namespace Tetris
             return true;
         }
 
-        public bool CanChangeShape(Transform bricks)
+        public bool CanChangeShape(Transform bricks,Vector3 anchor)
         {
             Vector3 prePos = bricks.position;
             Vector3 preRot = bricks.eulerAngles;
-            bricks.Rotate(Vector3.forward, 90, Space.World);
+            bricks.RotateAround(anchor,Vector3.forward, 90);
             bricks.position = prePos;
 
             foreach (Transform brick in bricks)
             {
+
+                if (brick.name == "Anchor")
+                    continue;
+
                 int nextY = Vector2Ex.GetInt(brick.position.y);
                 int nextX = Vector2Ex.GetInt(brick.position.x);
 
-                if (nextX < 0 || nextY < 0 || nextX > maxX || nextY > maxY)
+                if (nextX < 0 || nextY < 0 || nextX >= maxX || nextY > maxY)
                     return false;
 
                 if (allGrid[nextX].raw[nextY] != null)
@@ -122,6 +132,10 @@ namespace Tetris
         {
             foreach (Transform brick in bricks)
             {
+
+                if (brick.name == "Anchor")
+                    continue;
+
                 int curY = Vector2Ex.GetInt(brick.position.y);
                 int nextX = Vector2Ex.GetInt(brick.position.x) + 1;
 
@@ -146,6 +160,9 @@ namespace Tetris
         {
             foreach (Transform brick in bricks)
             {
+                if (brick.name == "Anchor")
+                    continue;
+
                 int realX = Vector2Ex.GetInt(brick.position.x);
                 int realY = Vector2Ex.GetInt(brick.position.y);
                 allGrid[realX].raw[realY] = brick;
@@ -159,6 +176,9 @@ namespace Tetris
         {
             foreach (Transform brick in bricks)
             {
+                if (brick.name == "Anchor")
+                    continue;
+
                 int realX = Vector2Ex.GetInt(brick.position.x);
                 int realY = Vector2Ex.GetInt(brick.position.y);
                 allGrid[realX].raw[realY] = null;
@@ -233,7 +253,6 @@ namespace Tetris
 
         private void ClearWhenFull(int fullRaw)
         {
-            Debug.Log("clear raw: " + fullRaw);
             for (int x = 0; x < maxX; x++)
             {
                 if (allGrid[x].raw[fullRaw] != null)
