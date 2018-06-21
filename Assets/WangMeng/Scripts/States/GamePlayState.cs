@@ -17,11 +17,7 @@ public class GamePlayState : State {
 
 	public override void OnUpdate ()
 	{
-      Manager.
-	  Bricks.
-	  curBricks.
-	  GetComponent<BrickMovement>().
-	  OnUpdate();
+      Manager.Bricks.curBricks.GetComponent<BrickMovement>().OnUpdate();
 	}
 }
 
