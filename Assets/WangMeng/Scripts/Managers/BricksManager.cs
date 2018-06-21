@@ -147,10 +147,7 @@ namespace Tetris
             return true;
         }
         #endregion
-        public void AccelerateDown(BrickMovement moveMent, float dropSpeed)
-        {
-            moveMent.DropSpeed = dropSpeed;
-        }
+
 
         /// <summary>
         /// 移动完之后更新存储数组

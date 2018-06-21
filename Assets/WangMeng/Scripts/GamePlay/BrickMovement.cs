@@ -46,16 +46,18 @@ namespace Tetris
             }
         }
 
+        float timer = 0;//下坠计时器
+
+
         public void OnActivate()
         {
             rotateAnchor = transform.Find("Anchor");
-            StartCoroutine(DropDown());
             BricksManager.AddDropEvent(DestroySelf);
+            //StartCoroutine(DropDown());
         }
 
         IEnumerator DropDown()
         {
-            //Debug.Log(123);
             yield return new WaitForSeconds(DropSpeed);
             BricksManager.Instance.ClearPreValue(transform);
 
@@ -75,6 +77,29 @@ namespace Tetris
             }
 
             yield return DropDown();
+        }
+
+        void FreeDropDown()
+        {
+            timer += Time.deltaTime;
+            if (timer > DropSpeed)
+            {
+                timer = 0;
+                BricksManager.Instance.ClearPreValue(transform);
+                if (BricksManager.Instance.CanDropDown(transform))
+                {
+                    Vector3 nextPos = transform.position - new Vector3(0, 1, 0);
+                    transform.position = nextPos;
+                    CanDropDown = true;
+                    BricksManager.Instance.UpdateGrid(transform);
+                }
+                else
+                {
+                    //一下两行代码执行的顺序影响满行的判断，不能更改
+                    BricksManager.Instance.UpdateGrid(transform);
+                    CanDropDown = false;
+                }
+            }
         }
 
         public void OnUpdate()
@@ -108,14 +133,16 @@ namespace Tetris
 
                 BricksManager.Instance.UpdateGrid(transform);
             }
-            if (Input.GetKey(InputManager.Down))
+
+            if (Input.GetKeyDown(InputManager.Down))
             {
-                BricksManager.Instance.AccelerateDown(this, 0.02f);
+                DropSpeed = 0.1f;
             }
-            else if (Input.GetKeyUp(InputManager.Down))
+            else if(Input.GetKeyUp(InputManager.Down))
             {
-                BricksManager.Instance.AccelerateDown(this, 1);
+                DropSpeed = 1;
             }
+            FreeDropDown();
 
             if (Input.GetKeyDown(InputManager.ChangeShape))
             {
@@ -124,7 +151,7 @@ namespace Tetris
                 Vector3 prePos = transform.position;
                 Vector3 preRot = transform.eulerAngles;
 
-                if (BricksManager.Instance.CanChangeShape(transform,rotateAnchor.position))
+                if (BricksManager.Instance.CanChangeShape(transform, rotateAnchor.position))
                 {
                     transform.eulerAngles = preRot;
                     transform.position = prePos;
@@ -143,7 +170,7 @@ namespace Tetris
         private void ChangeShape()
         {
             Vector3 prePos = transform.position;
-            transform.RotateAround(rotateAnchor.position,Vector3.forward,90);
+            transform.RotateAround(rotateAnchor.position, Vector3.forward, 90);
             //transform.position = prePos;
         }
 
