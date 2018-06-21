@@ -54,6 +54,7 @@ namespace Tetris
             rotateAnchor = transform.Find("Anchor");
             BricksManager.AddDropEvent(DestroySelf);
             curGameSpeed = 1;
+
         }
 
         void FreeDropDown()

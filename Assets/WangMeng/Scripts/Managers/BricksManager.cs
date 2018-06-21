@@ -227,7 +227,14 @@ namespace Tetris
 
         public void Function(object sender, FullRaws f)
         {
-            Debug.Log(f.count);
+            int fullRaw = 0;
+            for (int i = 0; i < fullRaws.Count; i++)
+            {
+                fullRaw = fullRaws[i];
+                //消除一行后每一行都向下移一行
+                fullRaw -= i;
+                ClearWhenFull(fullRaw);
+            }
         }
         #endregion
 
