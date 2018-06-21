@@ -5,26 +5,19 @@ using UnityEngine.UI;
 namespace Tetris{
 public class UIManager : MonoBehaviour {
 
-	[SerializeField]
-	private GameObject Score;
-	[SerializeField]
-	private GameObject HighScore;
-	[SerializeField]
-	private GameObject ScoreContent;
-	[SerializeField]
-	private GameObject HighScoreContent;
-
-	
-	public void SetScoreContent(int currentScore,int addScore)
+	public GameObject Canvas;
+	public void OnActivate()
 	{
-		ScoreContent.GetComponent<Text>().text=(currentScore+addScore).ToString();
-
-	}
-	public void SetHighScoreContent(int currentScore,int addScore)
-	{
-		HighScoreContent.GetComponent<Text>().text=(currentScore+addScore).ToString();
+		Canvas=GameObject.Find("Canvas");
+		score=transform.GetComponentInChildren<ScoreBoard>();
 	}
 
+	private ScoreBoard score;
+	public ScoreBoard Score{
+		get{
+			return score;
+		}
+	}
 	public void PauseButtonEvent()
 	{
 		Time.timeScale=1-Time.timeScale;

@@ -7,6 +7,7 @@ public class MenuState : State {
 	public override void OnActivate ()
 	{
 		Manager.Event.OnActivate();
+		Manager.UI.OnActivate();
 		Manager.Game.SetState(new GamePlayState());
 	}
 	public override void OnDeactivate ()

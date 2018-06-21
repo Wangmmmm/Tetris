@@ -12,11 +12,11 @@ public class ScoreManager : MonoBehaviour {
     private int highScore;
     public void AddScore(int clearLineCount)
     {
-        Manager.UI.SetScoreContent(currentScore,clearLineCount*addScoreUnit);
+        Manager.UI.Score.SetScoreContent(currentScore,clearLineCount*addScoreUnit);
         currentScore+=clearLineCount*addScoreUnit;
         if(currentScore>highScore)
         {
-            Manager.UI.SetHighScoreContent(highScore,currentScore-highScore);
+            Manager.UI.Score.SetHighScoreContent(highScore,currentScore-highScore);
             highScore=currentScore;
         }
     }
