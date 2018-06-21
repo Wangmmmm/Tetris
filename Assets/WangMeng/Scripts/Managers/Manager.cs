@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Tetris{
+/// <summary>
+/// 同过Manager这个类提供的静态变量来调用各个管理器
+/// </summary>
 public class Manager : MonoBehaviour {
 
 	private static GameManager _gameManager;

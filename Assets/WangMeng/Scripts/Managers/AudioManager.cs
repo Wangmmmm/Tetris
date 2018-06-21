@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 namespace Tetris{
+/// <summary>
+/// 音效控制器
+/// </summary>
 public class AudioManager : MonoBehaviour {
 	#region Game Spesific
     public AudioClip dropSound;

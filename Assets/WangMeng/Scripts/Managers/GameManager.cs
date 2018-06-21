@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 namespace Tetris{
+/// <summary>
+/// 游戏流程控制器
+/// </summary>
 public class GameManager : MonoBehaviour {
 
-	// Use this for initialization
+	//游戏逻辑所持有的状态机
 	private State state;
 	public State GameState{
 		get {
@@ -12,6 +15,7 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
+	//切换状态的方法
 	public void SetState(State s)
 	{
 		if(state!=null)
@@ -25,15 +29,14 @@ public class GameManager : MonoBehaviour {
 			state.OnActivate();
 		}
 	}
-	/// <summary>
-	/// Start is called on the frame when a script is enabled just before
-	/// any of the Update methods is called the first time.
-	/// </summary>
+
+	//游戏一开始就自动执行一次，将状态初始化为MenuState
 	void Start()
 	{
 		SetState(new MenuState());
 	}
-	// Update is called once per frame
+
+	// 游戏会逐帧自动调用，用来更新状态
 	void Update () {
 		state.OnUpdate();
 	}

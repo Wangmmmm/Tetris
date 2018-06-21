@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace Tetris
 {
+    /// <summary>
+    /// 游戏中每个方块上挂的脚本,包括了其基本移动行为，以及获取按键变形等行为
+    /// </summary>
     public class BrickMovement : MonoBehaviour
     {
 
