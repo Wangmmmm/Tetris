@@ -9,7 +9,7 @@ public class UIManager : MonoBehaviour {
 	public void OnActivate()
 	{
 		Canvas=GameObject.Find("Canvas");
-		score=transform.GetComponentInChildren<ScoreBoard>();
+		score= Canvas.transform.GetComponentInChildren<ScoreBoard>();
 	}
 
 	private ScoreBoard score;
@@ -21,6 +21,10 @@ public class UIManager : MonoBehaviour {
 	public void PauseButtonEvent()
 	{
 		Time.timeScale=1-Time.timeScale;
+	}
+	public void OnDeactive()
+	{
+
 	}
 	
 }
