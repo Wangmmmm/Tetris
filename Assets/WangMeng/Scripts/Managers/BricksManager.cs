@@ -49,8 +49,12 @@ namespace Tetris
             Instance = this;
             AddDropEvent(FullJudge);
         }
+
+
+
+
         /// <summary>
-        /// 移动判断
+        /// 移动相关
         /// </summary>
         #region
         /// <summary>
@@ -100,12 +104,12 @@ namespace Tetris
             return true;
         }
 
-        public bool CanChangeShape(Transform bricks,Vector3 anchor)
+        public bool CanChangeShape(Transform bricks, Vector3 anchor)
         {
             Vector3 prePos = bricks.position;
             Vector3 preRot = bricks.eulerAngles;
-            bricks.RotateAround(anchor,Vector3.forward, 90);
-            bricks.position = prePos;
+            bricks.RotateAround(anchor, Vector3.forward, 90);
+            //bricks.position = prePos;
 
             foreach (Transform brick in bricks)
             {
@@ -146,9 +150,6 @@ namespace Tetris
             }
             return true;
         }
-        #endregion
-
-
         /// <summary>
         /// 移动完之后更新存储数组
         /// </summary>
@@ -181,7 +182,7 @@ namespace Tetris
                 allGrid[realX].raw[realY] = null;
             }
         }
-
+        #endregion
 
         /// <summary>
         /// 事件添加和调用
@@ -204,6 +205,10 @@ namespace Tetris
         }
         #endregion
 
+        /// <summary>
+        /// 消除相关
+        /// </summary>
+        #region
         //消除
         private void FullJudge()
         {
@@ -270,4 +275,5 @@ namespace Tetris
             }
         }
     }
+    #endregion
 }

@@ -54,7 +54,6 @@ namespace Tetris
             rotateAnchor = transform.Find("Anchor");
             BricksManager.AddDropEvent(DestroySelf);
             curGameSpeed = 1;
-            //StartCoroutine(DropDown());
         }
 
         void FreeDropDown()
@@ -149,7 +148,6 @@ namespace Tetris
         {
             Vector3 prePos = transform.position;
             transform.RotateAround(rotateAnchor.position, Vector3.forward, 90);
-            //transform.position = prePos;
         }
 
         private void DestroySelf()
