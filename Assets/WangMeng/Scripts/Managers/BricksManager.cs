@@ -19,6 +19,14 @@ namespace Tetris
         }
     }
 
+    public class FullRaws : EventArgs
+    {
+        public int count = 0;
+        public FullRaws(int count)
+        {
+            this.count = count;
+        }
+    }
     public class BricksManager : MonoBehaviour
     {
         readonly int maxX = 10;
@@ -48,10 +56,8 @@ namespace Tetris
         {
             Instance = this;
             AddDropEvent(FullJudge);
+            Add();
         }
-
-
-
 
         /// <summary>
         /// 移动相关
@@ -203,6 +209,26 @@ namespace Tetris
             if (StopDropEvent != null)
                 StopDropEvent();
         }
+
+        public void Add()
+        {
+            Manager.Event.AddListener<FullRaws>(Function);
+        }
+
+        public void Remove()
+        {
+            Manager.Event.RemoveListener<FullRaws>(Function);
+        }
+
+        public void Raise(int count)
+        {
+            Manager.Event.Raise<FullRaws>(this, new FullRaws(count));
+        }
+
+        public void Function(object sender, FullRaws f)
+        {
+            Debug.Log(f.count);
+        }
         #endregion
 
         /// <summary>
@@ -213,6 +239,8 @@ namespace Tetris
         private void FullJudge()
         {
             List<int> fullRaws = IsFull();
+            if (fullRaws.Count == 0)
+                return;
 
             int fullRaw = 0;
             for (int i = 0; i < fullRaws.Count; i++)
@@ -220,9 +248,10 @@ namespace Tetris
                 fullRaw = fullRaws[i];
                 //消除一行后每一行都向下移一行
                 fullRaw -= i;
-
                 ClearWhenFull(fullRaw);
             }
+
+            Raise(fullRaws.Count);
         }
 
         //返回满了的行数
@@ -276,4 +305,5 @@ namespace Tetris
         }
     }
     #endregion
+
 }
