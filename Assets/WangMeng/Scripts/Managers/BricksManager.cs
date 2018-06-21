@@ -184,65 +184,74 @@ public class BricksManager : MonoBehaviour
         if (StopDropEvent != null)
             StopDropEvent();
     }
-    #endregion
+        #endregion
 
-    //消除
-    private void FullJudge()
-    {
-        int fullRaw = IsFull();
-        if (fullRaw != -1)
+        //消除
+        private void FullJudge()
         {
-            ClearWhenFull(fullRaw);
+            List<int> fullRaws = IsFull();
+
+            int fullRaw = 0;
+            for (int i = 0; i < fullRaws.Count; i++)
+            {
+                fullRaw = fullRaws[i];
+                //消除一行后每一行都向下移一行
+                if (i != 0)
+                    fullRaw -= 1;
+
+                ClearWhenFull(fullRaw);
+            }
         }
-    }
 
-    //返回满了的行数
-    private int IsFull()
-    {
-        int result = -1;
-        bool isFull = true;
-        for (int y = 0; y < maxY; y++)
+        //返回满了的行数
+        private List<int> IsFull()
         {
-            isFull = true;
+            List<int> results = new List<int>();
+
+            bool isFull;
+
+            for (int y = 0; y < maxY; y++)
+            {
+                isFull = true;
+                for (int x = 0; x < maxX; x++)
+                {
+                    if (allGrid[x].raw[y] == null)
+                    {
+                        isFull = false;
+                        break;
+                    }
+                }
+                //存在一行已满
+                if (isFull)
+                {
+                    results.Add(y);
+                }
+
+            }
+            return results;
+        }
+
+        private void ClearWhenFull(int fullRaw)
+        {
+            Debug.Log("clear raw: " + fullRaw);
             for (int x = 0; x < maxX; x++)
             {
-                if (allGrid[x].raw[y] == null)
-                {
-                    isFull = false;
-                    break;
-                }
+                if (allGrid[x].raw[fullRaw] != null)
+                    Destroy(allGrid[x].raw[fullRaw].gameObject);
             }
-            //存在一行已满
-            if (isFull)
+            //满行之上的下移动
+            for (int y = fullRaw + 1; y < maxY; y++)
             {
-                result = y;
-                return result;
-            }
-
-        }
-        return result;
-    }
-
-    private void ClearWhenFull(int fullRaw)
-    {
-        for (int x = 0; x < maxX; x++)
-        {
-            if (allGrid[x].raw[fullRaw] != null)
-                Destroy(allGrid[x].raw[fullRaw].gameObject);
-        }
-        //满行之上的下移动
-        for (int y = fullRaw + 1; y < maxY; y++)
-        {
-            for (int x = 0; x < maxX; x++)
-            {
-                if (allGrid[x].raw[y] != null)
+                for (int x = 0; x < maxX; x++)
                 {
-                    allGrid[x].raw[y].position = allGrid[x].raw[y].position - new Vector3(0, 1, 0);
-                    allGrid[x].raw[y - 1] = allGrid[x].raw[y];
-                    allGrid[x].raw[y] = null;
+                    if (allGrid[x].raw[y] != null)
+                    {
+                        allGrid[x].raw[y].position = allGrid[x].raw[y].position - new Vector3(0, 1, 0);
+                        allGrid[x].raw[y - 1] = allGrid[x].raw[y];
+                        allGrid[x].raw[y] = null;
+                    }
                 }
             }
         }
     }
-}
 }
