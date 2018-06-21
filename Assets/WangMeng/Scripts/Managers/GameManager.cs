@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour {
 	/// </summary>
 	void Start()
 	{
-		SetState(new GamePlayState());
+		SetState(new MenuState());
 	}
 	// Update is called once per frame
 	void Update () {

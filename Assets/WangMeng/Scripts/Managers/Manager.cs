@@ -41,6 +41,13 @@ public class Manager : MonoBehaviour {
 			return _bricksManager;
 		}
 	}
+	private static EventManager _eventManager;
+	public static EventManager Event
+	{
+		get{
+			return _eventManager;
+		}
+	}
 	/// <summary>
 	/// Awake is called when the script instance is being loaded.
 	/// </summary>
@@ -52,6 +59,7 @@ public class Manager : MonoBehaviour {
 		_scoreManager = GetComponent<ScoreManager> ();
 		_spawnManager=GetComponent<SpawnManager>();
 		_bricksManager=GetComponent<BricksManager>();
+		_eventManager=GetComponent<EventManager>();
 		DontDestroyOnLoad(gameObject);
 	}
 }
