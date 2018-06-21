@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace Tetris
 {
-
-
     public class BrickMovement : MonoBehaviour
     {
+
+        public Transform rotateAnchor;
 
         [SerializeField, SetProperty("MoveDistance")]
         private int _moveDistance;
@@ -46,34 +46,38 @@ namespace Tetris
             }
         }
 
+        private float timer = 0;//下坠计时器
+        private float curGameSpeed;
+
         public void OnActivate()
         {
-            StartCoroutine(DropDown());
+            rotateAnchor = transform.Find("Anchor");
             BricksManager.AddDropEvent(DestroySelf);
+            curGameSpeed = 1;
+
         }
 
-        IEnumerator DropDown()
+        void FreeDropDown()
         {
-            //Debug.Log(123);
-            yield return new WaitForSeconds(DropSpeed);
-            BricksManager.Instance.ClearPreValue(transform);
-
-            if (BricksManager.Instance.CanDropDown(transform))
+            timer += Time.deltaTime;
+            if (timer > DropSpeed)
             {
-                Vector3 nextPos = transform.position - new Vector3(0, 1, 0);
-                transform.position = nextPos;
-                CanDropDown = true;
-                BricksManager.Instance.UpdateGrid(transform);
+                timer = 0;
+                BricksManager.Instance.ClearPreValue(transform);
+                if (BricksManager.Instance.CanDropDown(transform))
+                {
+                    Vector3 nextPos = transform.position - new Vector3(0, 1, 0);
+                    transform.position = nextPos;
+                    CanDropDown = true;
+                    BricksManager.Instance.UpdateGrid(transform);
+                }
+                else
+                {
+                    //一下两行代码执行的顺序影响满行的判断，不能更改
+                    BricksManager.Instance.UpdateGrid(transform);
+                    CanDropDown = false;
+                }
             }
-            else
-            {
-                //一下两行代码执行的顺序影响满行的判断，不能更改
-                BricksManager.Instance.UpdateGrid(transform);
-                CanDropDown = false;
-                yield break;
-            }
-
-            yield return DropDown();
         }
 
         public void OnUpdate()
@@ -107,14 +111,16 @@ namespace Tetris
 
                 BricksManager.Instance.UpdateGrid(transform);
             }
-            if (Input.GetKey(InputManager.Down))
+
+            if (Input.GetKeyDown(InputManager.Down))
             {
-                BricksManager.Instance.AccelerateDown(this, 0.02f);
+                DropSpeed = curGameSpeed*0.05f;
             }
-            else if (Input.GetKeyUp(InputManager.Down))
+            else if(Input.GetKeyUp(InputManager.Down))
             {
-                BricksManager.Instance.AccelerateDown(this, 1);
+                DropSpeed = curGameSpeed;
             }
+            FreeDropDown();
 
             if (Input.GetKeyDown(InputManager.ChangeShape))
             {
@@ -123,7 +129,7 @@ namespace Tetris
                 Vector3 prePos = transform.position;
                 Vector3 preRot = transform.eulerAngles;
 
-                if (BricksManager.Instance.CanChangeShape(transform))
+                if (BricksManager.Instance.CanChangeShape(transform, rotateAnchor.position))
                 {
                     transform.eulerAngles = preRot;
                     transform.position = prePos;
@@ -142,8 +148,7 @@ namespace Tetris
         private void ChangeShape()
         {
             Vector3 prePos = transform.position;
-            transform.Rotate(Vector3.forward, 90, Space.World);
-            transform.position = prePos;
+            transform.RotateAround(rotateAnchor.position, Vector3.forward, 90);
         }
 
         private void DestroySelf()

@@ -19,6 +19,14 @@ namespace Tetris
         }
     }
 
+    public class FullRaws : EventArgs
+    {
+        public int count = 0;
+        public FullRaws(int count)
+        {
+            this.count = count;
+        }
+    }
     public class BricksManager : MonoBehaviour
     {
         readonly int maxX = 10;
@@ -48,9 +56,11 @@ namespace Tetris
         {
             Instance = this;
             AddDropEvent(FullJudge);
+            Add();
         }
+
         /// <summary>
-        /// 移动判断
+        /// 移动相关
         /// </summary>
         #region
         /// <summary>
@@ -62,6 +72,9 @@ namespace Tetris
         {
             foreach (Transform brick in bricks)
             {
+                if (brick.name == "Anchor")
+                    continue;
+
                 int nextY = Vector2Ex.GetInt(brick.position.y) - 1;
                 int curX = Vector2Ex.GetInt(brick.position.x);
 
@@ -83,6 +96,9 @@ namespace Tetris
         {
             foreach (Transform brick in bricks)
             {
+                if (brick.name == "Anchor")
+                    continue;
+
                 int curY = Vector2Ex.GetInt(brick.position.y);
                 int nextX = Vector2Ex.GetInt(brick.position.x) - 1;
 
@@ -94,19 +110,23 @@ namespace Tetris
             return true;
         }
 
-        public bool CanChangeShape(Transform bricks)
+        public bool CanChangeShape(Transform bricks, Vector3 anchor)
         {
             Vector3 prePos = bricks.position;
             Vector3 preRot = bricks.eulerAngles;
-            bricks.Rotate(Vector3.forward, 90, Space.World);
-            bricks.position = prePos;
+            bricks.RotateAround(anchor, Vector3.forward, 90);
+            //bricks.position = prePos;
 
             foreach (Transform brick in bricks)
             {
+
+                if (brick.name == "Anchor")
+                    continue;
+
                 int nextY = Vector2Ex.GetInt(brick.position.y);
                 int nextX = Vector2Ex.GetInt(brick.position.x);
 
-                if (nextX < 0 || nextY < 0 || nextX > maxX || nextY > maxY)
+                if (nextX < 0 || nextY < 0 || nextX >= maxX || nextY > maxY)
                     return false;
 
                 if (allGrid[nextX].raw[nextY] != null)
@@ -122,6 +142,10 @@ namespace Tetris
         {
             foreach (Transform brick in bricks)
             {
+
+                if (brick.name == "Anchor")
+                    continue;
+
                 int curY = Vector2Ex.GetInt(brick.position.y);
                 int nextX = Vector2Ex.GetInt(brick.position.x) + 1;
 
@@ -132,12 +156,6 @@ namespace Tetris
             }
             return true;
         }
-        #endregion
-        public void AccelerateDown(BrickMovement moveMent, float dropSpeed)
-        {
-            moveMent.DropSpeed = dropSpeed;
-        }
-
         /// <summary>
         /// 移动完之后更新存储数组
         /// </summary>
@@ -146,6 +164,9 @@ namespace Tetris
         {
             foreach (Transform brick in bricks)
             {
+                if (brick.name == "Anchor")
+                    continue;
+
                 int realX = Vector2Ex.GetInt(brick.position.x);
                 int realY = Vector2Ex.GetInt(brick.position.y);
                 allGrid[realX].raw[realY] = brick;
@@ -159,12 +180,15 @@ namespace Tetris
         {
             foreach (Transform brick in bricks)
             {
+                if (brick.name == "Anchor")
+                    continue;
+
                 int realX = Vector2Ex.GetInt(brick.position.x);
                 int realY = Vector2Ex.GetInt(brick.position.y);
                 allGrid[realX].raw[realY] = null;
             }
         }
-
+        #endregion
 
         /// <summary>
         /// 事件添加和调用
@@ -185,12 +209,48 @@ namespace Tetris
             if (StopDropEvent != null)
                 StopDropEvent();
         }
+
+        public void Add()
+        {
+            Manager.Event.AddListener<FullRaws>(Function);
+        }
+
+        public void Remove()
+        {
+            Manager.Event.RemoveListener<FullRaws>(Function);
+        }
+
+        public void Raise(int count)
+        {
+            Manager.Event.Raise<FullRaws>(this, new FullRaws(count));
+        }
+
+        public void Function(object sender, FullRaws f)
+        {
+            List<int> fullRaws = IsFull();
+            if (fullRaws.Count == 0)
+                return;
+            int fullRaw = 0;
+            for (int i = 0; i < fullRaws.Count; i++)
+            {
+                fullRaw = fullRaws[i];
+                //消除一行后每一行都向下移一行
+                fullRaw -= i;
+                ClearWhenFull(fullRaw);
+            }
+        }
         #endregion
 
+        /// <summary>
+        /// 消除相关
+        /// </summary>
+        #region
         //消除
         private void FullJudge()
         {
             List<int> fullRaws = IsFull();
+            if (fullRaws.Count == 0)
+                return;
 
             int fullRaw = 0;
             for (int i = 0; i < fullRaws.Count; i++)
@@ -198,9 +258,10 @@ namespace Tetris
                 fullRaw = fullRaws[i];
                 //消除一行后每一行都向下移一行
                 fullRaw -= i;
-
                 ClearWhenFull(fullRaw);
             }
+
+            Raise(fullRaws.Count);
         }
 
         //返回满了的行数
@@ -233,7 +294,6 @@ namespace Tetris
 
         private void ClearWhenFull(int fullRaw)
         {
-            Debug.Log("clear raw: " + fullRaw);
             for (int x = 0; x < maxX; x++)
             {
                 if (allGrid[x].raw[fullRaw] != null)
@@ -254,4 +314,6 @@ namespace Tetris
             }
         }
     }
+    #endregion
+
 }
