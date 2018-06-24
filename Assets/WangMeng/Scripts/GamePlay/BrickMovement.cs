@@ -12,7 +12,6 @@ namespace Tetris
         private int _moveDistance;
         public int MoveDistance { get { return _moveDistance; } set { _moveDistance = value; } }
 
-        [SerializeField, SetProperty("DropSpeed")]
         private float _dropSpeed;
         public float DropSpeed
         {
@@ -53,8 +52,8 @@ namespace Tetris
         {
             rotateAnchor = transform.Find("Anchor");
             BricksManager.AddDropEvent(DestroySelf);
-            curGameSpeed = 1;
-
+            DropSpeed = Manager.Bricks.DropSpeed;
+            curGameSpeed = DropSpeed;
         }
 
         void FreeDropDown()

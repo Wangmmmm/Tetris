@@ -52,6 +52,33 @@ namespace Tetris
         //当前在移动的方块
         public Transform curBricks;
 
+        [SerializeField,SetProperty("DropSpeed")]
+        private float _dropSpeed;
+        public float DropSpeed
+        {
+            get
+            {
+                return _dropSpeed;
+            }
+            set
+            {
+                _dropSpeed = value;
+            }
+        }
+
+        private bool isPause;
+        public bool IsPause
+        {
+            get
+            {
+                return isPause;
+            }
+            set
+            {
+                isPause = value;
+            }
+        }
+
         public void OnActivate()
         {
             Instance = this;
