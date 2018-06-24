@@ -39,7 +39,7 @@ namespace Tetris
                 if (value == false)
                 {
                     enabled = false;
-                    BricksManager.DropEvent();
+                    BricksManager.DropEvent(transform);
                 }
                 _canDropDown = value;
             }
@@ -61,6 +61,8 @@ namespace Tetris
             timer += Time.deltaTime;
             if (timer > DropSpeed)
             {
+                Debug.Log(gameObject.name);
+                Manager.Audio.PlayDropSound();
                 timer = 0;
                 BricksManager.Instance.ClearPreValue(transform);
                 if (BricksManager.Instance.CanDropDown(transform))
@@ -81,6 +83,9 @@ namespace Tetris
 
         public void OnUpdate()
         {
+            if (Manager.Game.IsGameOver)
+                return;
+
             Move();
         }
 
@@ -150,7 +155,7 @@ namespace Tetris
             transform.RotateAround(rotateAnchor.position, Vector3.forward, 90);
         }
 
-        private void DestroySelf()
+        private void DestroySelf(Transform trans)
         {
             if (transform.childCount == 0)
                 Destroy(gameObject);

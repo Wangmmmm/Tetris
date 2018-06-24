@@ -10,7 +10,6 @@ namespace Tetris
     {
         public Transform[] raw = new Transform[20];
     }
-
     public class Vector2Ex
     {
         public static int GetInt(float arg)
@@ -18,7 +17,6 @@ namespace Tetris
             return Mathf.RoundToInt(arg);
         }
     }
-
     public class FullRaws : EventArgs
     {
         public int count = 0;
@@ -27,10 +25,12 @@ namespace Tetris
             this.count = count;
         }
     }
+
     public class BricksManager : MonoBehaviour
     {
         readonly int maxX = 10;
         readonly int maxY = 20;
+        readonly int gameOverY = 14;
 
         public static BricksManager Instance
         {
@@ -45,7 +45,7 @@ namespace Tetris
         }
         private static BricksManager _instance;
         //当方块无法再下降时的事件
-        private static Action StopDropEvent;
+        private static Action<Transform> StopDropEvent;
 
         //存储当前界面方块位置
         public Col[] allGrid = new Col[10];
@@ -79,11 +79,16 @@ namespace Tetris
             }
         }
 
+        void Awake()
+        {
+            DropSpeed = 1;
+        }
+
         public void OnActivate()
         {
             Instance = this;
             AddDropEvent(FullJudge);
-            Add();
+            AddDropEvent(GameOverJudge);
         }
 
         /// <summary>
@@ -107,12 +112,10 @@ namespace Tetris
 
                 if (nextY < 0)
                 {
-                    Debug.Log("next pos is out border");
                     return false;
                 }
                 if (allGrid[curX].raw[nextY] != null)
                 {
-                    Debug.Log("next pos has brick");
                     return false;
                 }
             }
@@ -221,7 +224,7 @@ namespace Tetris
         /// 事件添加和调用
         /// </summary>
         #region
-        public static void AddDropEvent(Action ac)
+        public static void AddDropEvent(Action<Transform> ac)
         {
             StopDropEvent += ac;
         }
@@ -231,20 +234,10 @@ namespace Tetris
             StopDropEvent = null;
         }
 
-        public static void DropEvent()
+        public static void DropEvent(Transform trans)
         {
             if (StopDropEvent != null)
-                StopDropEvent();
-        }
-
-        public void Add()
-        {
-            Manager.Event.AddListener<FullRaws>(Function);
-        }
-
-        public void Remove()
-        {
-            Manager.Event.RemoveListener<FullRaws>(Function);
+                StopDropEvent(trans);
         }
 
         public void Raise(int count)
@@ -252,10 +245,6 @@ namespace Tetris
             Manager.Event.Raise<FullRaws>(this, new FullRaws(count));
         }
 
-        public void Function(object sender, FullRaws f)
-        {
-            
-        }
         #endregion
 
         /// <summary>
@@ -263,7 +252,7 @@ namespace Tetris
         /// </summary>
         #region
         //消除
-        private void FullJudge()
+        private void FullJudge(Transform trans)
         {
             List<int> fullRaws = IsFull();
             if (fullRaws.Count == 0)
@@ -330,7 +319,35 @@ namespace Tetris
                 }
             }
         }
-    }
-    #endregion
+        #endregion
+        /// <summary>
+        /// 游戏结束判断
+        /// </summary>
+        #region
 
+        private void GameOverJudge(Transform curBricks)
+        {
+            if (IsGameOver(curBricks))
+            {
+                Manager.Event.Raise<GameOverRaws>(this,new GameOverRaws());
+            }
+        }
+
+        private bool IsGameOver(Transform lastBrick)
+        {
+            if (lastBrick.position.y >= gameOverY)
+            {
+                return true;
+            }
+            return false;
+        }
+#endregion
+    }
+
+    public class GameOverRaws:EventArgs
+    {
+        public GameOverRaws()
+        {
+        }
+    }
 }

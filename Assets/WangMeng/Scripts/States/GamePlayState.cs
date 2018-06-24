@@ -1,25 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-namespace Tetris{
-public class GamePlayState : State {
+namespace Tetris
+{
+    public class GamePlayState : State
+    {
 
-	public override void OnActivate ()
-	{
-		Manager.Spawn.OnActivate();
-		Manager.Bricks.OnActivate();
-		Manager.Score.OnActivate();
-		//Manager.Bricks.curBricks.GetComponent<BrickMovement>().OnActivate();
-	}
-	public override void OnDeactivate ()
-	{
-      
-	}
+        public override void OnActivate()
+        {
+            Manager.Spawn.OnActivate();
+            Manager.Bricks.OnActivate();
+            Manager.Score.OnActivate();
+            //Manager.Bricks.curBricks.GetComponent<BrickMovement>().OnActivate();
+        }
+        public override void OnDeactivate()
+        {
 
-	public override void OnUpdate ()
-	{
-      Manager.Bricks.curBricks.GetComponent<BrickMovement>().OnUpdate();
-	}
-}
+        }
+
+        public override void OnUpdate()
+        {
+            Manager.Bricks.curBricks.GetComponent<BrickMovement>().OnUpdate();
+        }
+    }
 
 }
