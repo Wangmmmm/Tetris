@@ -6,6 +6,29 @@ namespace Tetris
     public class BrickMovement : MonoBehaviour
     {
 
+        public static bool isCooperate;
+        public enum ControlState
+        {
+            player1,
+            player2
+        }
+
+        private static ControlState _controller;
+        public static ControlState Controller
+        {
+            get
+            {
+                return _controller;
+            }
+            set
+            {
+                if (_controller == ControlState.player1)
+                    _controller = ControlState.player2;
+                else
+                    _controller = ControlState.player1;
+            }
+        }
+
         public Transform rotateAnchor;
 
         [SerializeField, SetProperty("MoveDistance")]
@@ -52,6 +75,7 @@ namespace Tetris
         {
             rotateAnchor = transform.Find("Anchor");
             BricksManager.AddDropEvent(DestroySelf);
+            BricksManager.AddDropEvent((Transform) => { Controller = ControlState.player2; });
             DropSpeed = Manager.Bricks.DropSpeed;
             curGameSpeed = DropSpeed;
         }
@@ -86,7 +110,81 @@ namespace Tetris
             if (Manager.Game.IsGameOver)
                 return;
 
-            Move();
+            if (!isCooperate)
+            {
+                Move();
+            }
+            else
+            {
+                CooperateMove();
+            }
+        }
+
+        private void CooperateMove()
+        {
+            if (Controller == ControlState.player2)
+            {
+                Move();
+            }
+            else
+            {
+                if (Input.GetKeyDown(InputManager.Left_s))
+                {
+                    BricksManager.Instance.ClearPreValue(transform);
+
+                    if (BricksManager.Instance.CanLeftMove(transform))
+                    {
+                        Vector3 nextPos = transform.position - new Vector3(1, 0, 0);
+                        transform.position = nextPos;
+                    }
+
+                    BricksManager.Instance.UpdateGrid(transform);
+                }
+                else if (Input.GetKeyDown(InputManager.Right_s))
+                {
+                    BricksManager.Instance.ClearPreValue(transform);
+
+                    if (BricksManager.Instance.CanRightMove(transform))
+                    {
+                        Vector3 nextPos = transform.position + new Vector3(1, 0, 0);
+                        transform.position = nextPos;
+                    }
+
+                    BricksManager.Instance.UpdateGrid(transform);
+                }
+
+                if (Input.GetKeyDown(InputManager.Down_s))
+                {
+                    DropSpeed = curGameSpeed * 0.05f;
+                }
+                else if (Input.GetKeyUp(InputManager.Down_s))
+                {
+                    DropSpeed = curGameSpeed;
+                }
+                FreeDropDown();
+
+                if (Input.GetKeyDown(InputManager.ChangeShape_s))
+                {
+                    BricksManager.Instance.ClearPreValue(transform);
+
+                    Vector3 prePos = transform.position;
+                    Vector3 preRot = transform.eulerAngles;
+
+                    if (BricksManager.Instance.CanChangeShape(transform, rotateAnchor.position))
+                    {
+                        transform.eulerAngles = preRot;
+                        transform.position = prePos;
+                        ChangeShape();
+                    }
+                    else
+                    {
+                        transform.eulerAngles = preRot;
+                        transform.position = prePos;
+                    }
+
+                    BricksManager.Instance.UpdateGrid(transform);
+                }
+            }
         }
 
         private void Move()
@@ -118,9 +216,9 @@ namespace Tetris
 
             if (Input.GetKeyDown(InputManager.Down))
             {
-                DropSpeed = curGameSpeed*0.05f;
+                DropSpeed = curGameSpeed * 0.05f;
             }
-            else if(Input.GetKeyUp(InputManager.Down))
+            else if (Input.GetKeyUp(InputManager.Down))
             {
                 DropSpeed = curGameSpeed;
             }
