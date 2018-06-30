@@ -52,15 +52,16 @@ public class MainMenuManager : MonoBehaviour
         resetForSignUp.onClick.AddListener(ResetForSignUp);
         changeToSignUpPage.onClick.AddListener(ChangeToSignUpPage);
     }
-    //Sign in comfirm
+
     public void ComfirmForSignIn()
     {
 
     }
-    //Change to signup page
+
     public void ChangeToSignUpPage()
     {
-
+        LoginPage.SetActive(false);
+        SignUpPage.SetActive(true);
     }
 
     public void ComfirmForSignUp()
@@ -75,7 +76,8 @@ public class MainMenuManager : MonoBehaviour
 
     public void ChangeToSignIn()
     {
-
+        LoginPage.SetActive(true);
+        SignUpPage.SetActive(false);
     }
 
 }

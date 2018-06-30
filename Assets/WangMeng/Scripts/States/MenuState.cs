@@ -11,7 +11,7 @@ namespace Tetris
             Manager.Event.OnActivate();
             Manager.UI.OnActivate();
             Manager.Game.SetState(new GamePlayState());
-           // Manager.Game.SetState(new CooperateState());
+            //Manager.Game.SetState(new CooperateState());
 
         }
         public override void OnDeactivate()

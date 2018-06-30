@@ -28,8 +28,8 @@ namespace Tetris
 
     public class BricksManager : MonoBehaviour
     {
-        readonly int maxX = 10;
-        readonly int maxY = 20;
+        public readonly int maxX = 10;
+        public readonly int maxY = 20;
         readonly int gameOverY = 14;
 
         public static BricksManager Instance
@@ -52,7 +52,7 @@ namespace Tetris
         //当前在移动的方块
         public Transform curBricks;
 
-        [SerializeField,SetProperty("DropSpeed")]
+        [SerializeField, SetProperty("DropSpeed")]
         private float _dropSpeed;
         public float DropSpeed
         {
@@ -282,7 +282,7 @@ namespace Tetris
                 isFull = true;
                 for (int x = 0; x < maxX; x++)
                 {
-                    if (allGrid[x].raw[y] == null)
+                    if (allGrid[x].raw[y] == null || allGrid[x].raw[y].CompareTag(AllString.Tags.Block))
                     {
                         isFull = false;
                         break;
@@ -329,7 +329,7 @@ namespace Tetris
         {
             if (IsGameOver(curBricks))
             {
-                Manager.Event.Raise<GameOverRaws>(this,new GameOverRaws());
+                Manager.Event.Raise<GameOverRaws>(this, new GameOverRaws());
             }
         }
 
@@ -341,10 +341,10 @@ namespace Tetris
             }
             return false;
         }
-#endregion
+        #endregion
     }
 
-    public class GameOverRaws:EventArgs
+    public class GameOverRaws : EventArgs
     {
         public GameOverRaws()
         {
