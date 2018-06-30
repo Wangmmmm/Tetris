@@ -6,6 +6,37 @@ namespace Tetris
 {
     public class BlockManager : MonoBehaviour
     {
+        private static bool _isBlock;
+        public static bool IsBlock
+        {
+            get
+            {
+                return _isBlock;
+            }
+            set
+            {
+                _isBlock = value;
+                if (value == true)
+                {
+                    Instance.SpawnBlock();
+                }
+            }
+        }
+
+
+        private static BlockManager _instance;
+        public static BlockManager Instance
+        {
+
+            get
+            {
+                return _instance;
+            }
+            set
+            {
+                _instance = value;
+            }
+        }
 
         public Transform Grids;
         private Transform[] allGridsBG;
@@ -13,7 +44,7 @@ namespace Tetris
 
         void Start()
         {
-            SpawnBlock();
+            Instance = this;
         }
 
         void SpawnBlock()

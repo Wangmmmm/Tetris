@@ -1,28 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 namespace Tetris
 {
-    public class MenuState : State
+    public class BlockState : State
     {
-
         public override void OnActivate()
         {
-            Manager.Event.OnActivate();
-            Manager.UI.OnActivate();
-            //Manager.Game.SetState(new GamePlayState());
-            //Manager.Game.SetState(new CooperateState());
-            Manager.Game.SetState(new BlockState());
+            BlockManager.IsBlock=true;
+            Manager.Spawn.OnActivate();
+            Manager.Bricks.OnActivate();
+            Manager.Score.OnActivate(); ;
         }
+
         public override void OnDeactivate()
         {
-
+      
         }
 
         public override void OnUpdate()
         {
-
+            Manager.Bricks.curBricks.GetComponent<BrickMovement>().OnUpdate();
         }
-
     }
 }
