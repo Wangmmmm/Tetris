@@ -26,9 +26,9 @@ namespace Tetris
 
         public void Setting()
         {
-
+            
         }
-
+   
 
     }
 }
