@@ -47,10 +47,11 @@ namespace Tetris
         /// Start is called on the frame when a script is enabled just before
         /// any of the Update methods is called the first time.
         /// </summary>
-        void Start()
+        public void OnActivate()
         {
-            SetState(new MenuState());
-            Manager.Event.AddListener<GameOverRaws>(GameOver);
+            
+           Manager.Event.AddListener<GameOverRaws>(GameOver);
+           SetState(new MenuState());
         }
         // Update is called once per frame
         void Update()

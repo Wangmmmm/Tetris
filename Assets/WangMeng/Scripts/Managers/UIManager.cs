@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 namespace Tetris{
 	/// <summary>
 	/// UI管理器
@@ -10,6 +11,9 @@ public class UIManager : MonoBehaviour {
 
 	//所有UI组件都在一个Canvas(画布下),是它的子物体，所以想要找到这些组件，可以通过Canvas物体来找
 	public GameObject Canvas;
+
+
+	public GameObject Tip;
 
 	//游戏一开始就执行，找到画布
 	public void OnActivate()
@@ -31,6 +35,15 @@ public class UIManager : MonoBehaviour {
 
 	public void OnDeactive()
 	{
+
+	}
+
+
+	public void AddTips(string text)
+	{
+		var tip=Instantiate(Tip) as GameObject;
+
+		tip.GetComponentInChildren<Text>().text=text;
 
 	}
 	
