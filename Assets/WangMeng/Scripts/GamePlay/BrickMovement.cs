@@ -9,13 +9,35 @@ namespace Tetris
     public class BrickMovement : MonoBehaviour
     {
 
+        public static bool isCooperate;
+        public enum ControlState
+        {
+            player1,
+            player2
+        }
+
+        private static ControlState _controller;
+        public static ControlState Controller
+        {
+            get
+            {
+                return _controller;
+            }
+            set
+            {
+                if (_controller == ControlState.player1)
+                    _controller = ControlState.player2;
+                else
+                    _controller = ControlState.player1;
+            }
+        }
+
         public Transform rotateAnchor;
 
         [SerializeField, SetProperty("MoveDistance")]
         private int _moveDistance;
         public int MoveDistance { get { return _moveDistance; } set { _moveDistance = value; } }
 
-        [SerializeField, SetProperty("DropSpeed")]
         private float _dropSpeed;
         public float DropSpeed
         {
@@ -43,7 +65,7 @@ namespace Tetris
                 if (value == false)
                 {
                     enabled = false;
-                    BricksManager.DropEvent();
+                    BricksManager.DropEvent(transform);
                 }
                 _canDropDown = value;
             }
@@ -56,8 +78,9 @@ namespace Tetris
         {
             rotateAnchor = transform.Find("Anchor");
             BricksManager.AddDropEvent(DestroySelf);
-            curGameSpeed = 1;
-
+            BricksManager.AddDropEvent((Transform) => { Controller = ControlState.player2; });
+            DropSpeed = Manager.Bricks.DropSpeed;
+            curGameSpeed = DropSpeed;
         }
 
         void FreeDropDown()
@@ -65,6 +88,8 @@ namespace Tetris
             timer += Time.deltaTime;
             if (timer > DropSpeed)
             {
+                Debug.Log(gameObject.name);
+                Manager.Audio.PlayDropSound();
                 timer = 0;
                 BricksManager.Instance.ClearPreValue(transform);
                 if (BricksManager.Instance.CanDropDown(transform))
@@ -85,7 +110,84 @@ namespace Tetris
 
         public void OnUpdate()
         {
-            Move();
+            if (Manager.Game.IsGameOver)
+                return;
+
+            if (!isCooperate)
+            {
+                Move();
+            }
+            else
+            {
+                CooperateMove();
+            }
+        }
+
+        private void CooperateMove()
+        {
+            if (Controller == ControlState.player2)
+            {
+                Move();
+            }
+            else
+            {
+                if (Input.GetKeyDown(InputManager.Left_s))
+                {
+                    BricksManager.Instance.ClearPreValue(transform);
+
+                    if (BricksManager.Instance.CanLeftMove(transform))
+                    {
+                        Vector3 nextPos = transform.position - new Vector3(1, 0, 0);
+                        transform.position = nextPos;
+                    }
+
+                    BricksManager.Instance.UpdateGrid(transform);
+                }
+                else if (Input.GetKeyDown(InputManager.Right_s))
+                {
+                    BricksManager.Instance.ClearPreValue(transform);
+
+                    if (BricksManager.Instance.CanRightMove(transform))
+                    {
+                        Vector3 nextPos = transform.position + new Vector3(1, 0, 0);
+                        transform.position = nextPos;
+                    }
+
+                    BricksManager.Instance.UpdateGrid(transform);
+                }
+
+                if (Input.GetKeyDown(InputManager.Down_s))
+                {
+                    DropSpeed = curGameSpeed * 0.05f;
+                }
+                else if (Input.GetKeyUp(InputManager.Down_s))
+                {
+                    DropSpeed = curGameSpeed;
+                }
+                FreeDropDown();
+
+                if (Input.GetKeyDown(InputManager.ChangeShape_s))
+                {
+                    BricksManager.Instance.ClearPreValue(transform);
+
+                    Vector3 prePos = transform.position;
+                    Vector3 preRot = transform.eulerAngles;
+
+                    if (BricksManager.Instance.CanChangeShape(transform, rotateAnchor.position))
+                    {
+                        transform.eulerAngles = preRot;
+                        transform.position = prePos;
+                        ChangeShape();
+                    }
+                    else
+                    {
+                        transform.eulerAngles = preRot;
+                        transform.position = prePos;
+                    }
+
+                    BricksManager.Instance.UpdateGrid(transform);
+                }
+            }
         }
 
         private void Move()
@@ -117,9 +219,9 @@ namespace Tetris
 
             if (Input.GetKeyDown(InputManager.Down))
             {
-                DropSpeed = curGameSpeed*0.05f;
+                DropSpeed = curGameSpeed * 0.05f;
             }
-            else if(Input.GetKeyUp(InputManager.Down))
+            else if (Input.GetKeyUp(InputManager.Down))
             {
                 DropSpeed = curGameSpeed;
             }
@@ -154,7 +256,7 @@ namespace Tetris
             transform.RotateAround(rotateAnchor.position, Vector3.forward, 90);
         }
 
-        private void DestroySelf()
+        private void DestroySelf(Transform trans)
         {
             if (transform.childCount == 0)
                 Destroy(gameObject);

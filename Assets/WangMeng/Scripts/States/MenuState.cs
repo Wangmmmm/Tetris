@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+<<<<<<< HEAD
 namespace Tetris{
 /// <summary>
 /// 菜单栏状态
@@ -33,4 +34,30 @@ public class MenuState : State {
 	}
 	
 }
+=======
+namespace Tetris
+{
+    public class MenuState : State
+    {
+
+        public override void OnActivate()
+        {
+            Manager.Event.OnActivate();
+            Manager.UI.OnActivate();
+            //Manager.Game.SetState(new GamePlayState());
+            //Manager.Game.SetState(new CooperateState());
+            Manager.Game.SetState(new BlockState());
+        }
+        public override void OnDeactivate()
+        {
+
+        }
+
+        public override void OnUpdate()
+        {
+
+        }
+
+    }
+>>>>>>> 3e1a5b27959d9bc746c5d532952cea46db015501
 }

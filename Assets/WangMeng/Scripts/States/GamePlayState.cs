@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+<<<<<<< HEAD
 namespace Tetris{
 /// <summary>
 /// 游戏开始玩时的状态
@@ -27,5 +28,29 @@ public class GamePlayState : State {
       Manager.Bricks.curBricks.GetComponent<BrickMovement>().OnUpdate();
 	}
 }
+=======
+namespace Tetris
+{
+    public class GamePlayState : State
+    {
+
+        public override void OnActivate()
+        {
+            Manager.Spawn.OnActivate();
+            Manager.Bricks.OnActivate();
+            Manager.Score.OnActivate();
+            //Manager.Bricks.curBricks.GetComponent<BrickMovement>().OnActivate();
+        }
+        public override void OnDeactivate()
+        {
+
+        }
+
+        public override void OnUpdate()
+        {
+            Manager.Bricks.curBricks.GetComponent<BrickMovement>().OnUpdate();
+        }
+    }
+>>>>>>> 3e1a5b27959d9bc746c5d532952cea46db015501
 
 }
