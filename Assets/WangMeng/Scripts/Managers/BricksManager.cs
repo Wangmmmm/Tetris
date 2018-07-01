@@ -26,13 +26,6 @@ namespace Tetris
         }
     }
 
-<<<<<<< HEAD
-
-    /// <summary>
-    /// 游戏逻辑的控制器
-    /// </summary>
-=======
->>>>>>> 3e1a5b27959d9bc746c5d532952cea46db015501
     public class BricksManager : MonoBehaviour
     {
         public readonly int maxX = 10;
