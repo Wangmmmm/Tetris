@@ -18,40 +18,23 @@ namespace Tetris
                 _isBlock = value;
                 if (value == true)
                 {
-                    Instance.SpawnBlock();
+                    SpawnBlock();
                 }
             }
         }
 
-
-        private static BlockManager _instance;
-        public static BlockManager Instance
-        {
-
-            get
-            {
-                return _instance;
-            }
-            set
-            {
-                _instance = value;
-            }
-        }
-
-        public Transform Grids;
-        private Transform[] allGridsBG;
+        private static Transform Grids;
+        private static Transform[] allGridsBG;
         public int randomCount = 1;
-
-        void Start()
+        static  void SpawnBlock()
         {
-            Instance = this;
-        }
+            Grids = GameObject.Find("Grids").transform;
 
-        void SpawnBlock()
-        {
             allGridsBG = Grids.GetComponentsInChildren<Transform>();
             int x, y;
             int randomIndex;
+            int randomCount = 5;
+
 
             for (int i = 0; i < randomCount; i++)
             {
