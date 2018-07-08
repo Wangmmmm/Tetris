@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 namespace Tetris
 {
     public class GamePlayState : State
@@ -8,6 +9,7 @@ namespace Tetris
 
         public override void OnActivate()
         {
+             SceneManager.LoadScene("GamePlay");
             Manager.UI.OnActivate();
             Manager.Spawn.OnActivate();
             Manager.Bricks.OnActivate();

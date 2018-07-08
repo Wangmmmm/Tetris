@@ -140,7 +140,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void TweenOpenWithScale(Transform trans)
     {
-        float scale=trans.localScale.x;
+        float scale=1;
 
         trans.localScale=new Vector3(0,0,0);
         trans.gameObject.SetActive(true);
@@ -149,7 +149,7 @@ public class MainMenuManager : MonoBehaviour
     }
     public void TweenCloseWithScale(Transform trans)
     {
-        float scale=trans.localScale.x;
+        float scale=1;
 
        
         trans.DOScale(new Vector3(0,0,0),0.5f).OnComplete(()=>{trans.gameObject.SetActive(false);trans.localScale=new Vector3(scale,scale,scale);});
