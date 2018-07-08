@@ -10,6 +10,7 @@ namespace Tetris
         public override void OnActivate()
         {
             BrickMovement.isCooperate = true;
+             Manager.UI.OnActivate();
             Manager.Spawn.OnActivate();
             Manager.Bricks.OnActivate();
             Manager.Score.OnActivate();

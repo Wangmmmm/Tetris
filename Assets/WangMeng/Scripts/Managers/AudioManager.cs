@@ -23,8 +23,17 @@ public class AudioManager : MonoBehaviour {
     public AudioClip popUpClose;
     #endregion
 
+	public bool IsOpen{get{return musicSource.volume!=0;}}
 
+	public void SetAudioSwitch(bool target)
+	{
+		if(target)
+		{musicSource.volume=1;soundSource.volume=1;}
+		else{
+			musicSource.volume=0;soundSource.volume=0;
+		}
 
+	}
 
     #region Sound FX Methods
     public void PlayLoseSound()

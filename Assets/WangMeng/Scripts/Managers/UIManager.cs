@@ -24,6 +24,7 @@ public class UIManager : MonoBehaviour {
 		score= Canvas.transform.GetComponentInChildren<ScoreBoard>();
 	}
 	
+	
 
 	//专门管理分数板UI的变量
 	private ScoreBoard score;
@@ -41,6 +42,7 @@ public class UIManager : MonoBehaviour {
 
 	public void AddTips(string text)
 	{
+		if(text==null||text=="")return;
 		var tip=Instantiate(Tip) as GameObject;
 
 		tip.GetComponentInChildren<Text>().text=text;

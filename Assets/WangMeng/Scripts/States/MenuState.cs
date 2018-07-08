@@ -8,8 +8,8 @@ namespace Tetris
 
         public override void OnActivate()
         {
-         
-            Manager.Game.SetState(new GamePlayState());
+            
+           // Manager.Game.SetState(new GamePlayState());
           
             //Manager.Game.SetState(new CooperateState());
             //Manager.Game.SetState(new BlockState());

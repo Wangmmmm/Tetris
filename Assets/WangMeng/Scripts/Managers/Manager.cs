@@ -74,7 +74,7 @@ public class Manager : MonoBehaviour {
 		DontDestroyOnLoad(gameObject);
 
 		Manager.Event.OnActivate();
-        Manager.UI.OnActivate();
+       
 		Manager.Game.OnActivate();
 		
 	}

@@ -8,9 +8,11 @@ namespace Tetris
 
         public override void OnActivate()
         {
+            Manager.UI.OnActivate();
             Manager.Spawn.OnActivate();
             Manager.Bricks.OnActivate();
             Manager.Score.OnActivate();
+
             //Manager.Bricks.curBricks.GetComponent<BrickMovement>().OnActivate();
         }
         public override void OnDeactivate()
