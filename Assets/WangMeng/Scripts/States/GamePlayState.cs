@@ -9,7 +9,7 @@ namespace Tetris
 
         public override void OnActivate()
         {
-             SceneManager.LoadScene("GamePlay");
+            Manager.Game.Game.SetActive(true);
             Manager.UI.OnActivate();
             Manager.Spawn.OnActivate();
             Manager.Bricks.OnActivate();
@@ -19,7 +19,7 @@ namespace Tetris
         }
         public override void OnDeactivate()
         {
-
+                
         }
 
         public override void OnUpdate()

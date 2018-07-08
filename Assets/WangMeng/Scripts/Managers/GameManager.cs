@@ -5,7 +5,10 @@ namespace Tetris
 {
     public class GameManager : MonoBehaviour
     {
+        public GameObject Menu;
+        public GameObject Game;
 
+        public static string username;
         // Use this for initialization
         private State state;
         public State GameState

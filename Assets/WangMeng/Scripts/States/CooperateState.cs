@@ -9,7 +9,7 @@ namespace Tetris
     {
         public override void OnActivate()
         {
-            SceneManager.LoadScene("GamePlay");
+            Manager.Game.Game.SetActive(true);
             BrickMovement.isCooperate = true;
 
              Manager.UI.OnActivate();

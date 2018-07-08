@@ -8,7 +8,7 @@ namespace Tetris
     {
         public override void OnActivate()
         {
-                 SceneManager.LoadScene("GamePlay");
+            Manager.Game.Game.SetActive(true);
 
             BlockManager.IsBlock=true;
             Manager.UI.OnActivate();

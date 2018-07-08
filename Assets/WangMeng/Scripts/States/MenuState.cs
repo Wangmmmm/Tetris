@@ -16,7 +16,7 @@ namespace Tetris
         }
         public override void OnDeactivate()
         {
-            
+            Manager.Game.Menu.SetActive(false);
         }
 
         public override void OnUpdate()

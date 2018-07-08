@@ -49,7 +49,8 @@ public class ScoreManager : MonoBehaviour {
         {
             Manager.UI.Score.SetHighScoreContent(highScore,currentScore-highScore);
             highScore=currentScore;
-        }
+                Manager.DB.UpdateMessage(Tetris.GameManager.username, highScore);
+            }
     }
     public void Init()
     {
@@ -65,7 +66,8 @@ public class ScoreManager : MonoBehaviour {
     //从数据库或者服务器读取历史最高分
     public int LoadHighScore()
     {
-        return 0;
+           return Manager.DB.FindScore(Tetris.GameManager.username);
+       // return 0;
     }
 	
 	

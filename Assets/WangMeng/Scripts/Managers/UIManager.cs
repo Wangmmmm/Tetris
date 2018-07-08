@@ -22,7 +22,14 @@ public class UIManager : MonoBehaviour {
 
 		//将score引用到游戏中的ScoreBoard组件上
 		score= Canvas.transform.GetComponentInChildren<ScoreBoard>();
-	}
+
+         
+                OpenSourceImg.SetActive(Manager.Audio.IsOpen);
+                CloseSourceImg.SetActive(!Manager.Audio.IsOpen);
+
+         
+        
+        }
 	
 	
 
@@ -48,6 +55,54 @@ public class UIManager : MonoBehaviour {
 		tip.GetComponentInChildren<Text>().text=text;
 
 	}
-	
-}
+        public GameObject pauseImg;
+        public GameObject continueImg;
+    public void PauseBtn()
+    {   
+            
+            
+            Time.timeScale = 1 - Time.timeScale;
+
+            if (Time.timeScale == 1)
+            {
+                pauseImg.SetActive(true);
+                continueImg.SetActive(false);
+            }
+            else
+            {
+                pauseImg.SetActive(false);
+                continueImg.SetActive(true);
+            }
+
+    }
+        public GameObject OpenSourceImg;
+        public GameObject CloseSourceImg;
+        public void SourceBtn()
+        {
+            OpenSourceImg.SetActive(!Manager.Audio.IsOpen);
+            CloseSourceImg.SetActive(Manager.Audio.IsOpen);
+            Manager.Audio.SetAudioSwitch(!Manager.Audio.IsOpen);
+
+
+        }
+        public GameObject RankBtn;
+        public GameObject CloseRankBtn;
+        public GameObject RankBoard;
+        public void OnRankBtn()
+        {
+            Time.timeScale = 0;
+            pauseImg.transform.parent.GetComponent<Button>().interactable = false;
+            MainMenuManager. TweenOpenWithScale(RankBoard.transform);
+            RankBtn.gameObject.SetActive(false);
+            CloseRankBtn.gameObject.SetActive(true);
+        }
+        public void OnRankCloseBtn()
+        {
+            pauseImg.transform.parent.GetComponent<Button>().interactable = true;
+            Time.timeScale = 1;
+            MainMenuManager.TweenCloseWithScale(RankBoard.transform);
+            RankBtn.gameObject.SetActive(true);
+            CloseRankBtn.gameObject.SetActive(false);
+        }
+    }
 }

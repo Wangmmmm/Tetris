@@ -72,7 +72,7 @@ public class MainMenuManager : MonoBehaviour
         string tipText="";
         switch(mainMenuCtrl.TrySignIn(accountText.text,pwdText.transform.parent.GetComponent<InputField>().text))
         {
-            case SignInFeedbackType.Succeed:tipText="登录成功，请选择游戏模式"; 
+            case SignInFeedbackType.Succeed:tipText="登录成功，请选择游戏模式"; Tetris.GameManager.username = accountText.text;
             TweenOpenWithScale(ChooseBoard.transform);
             LoginPage.SetActive(false);break;
             case SignInFeedbackType.WrongPassword:tipText="密码不正确";break;
@@ -138,21 +138,24 @@ public class MainMenuManager : MonoBehaviour
 
 
 
-    public void TweenOpenWithScale(Transform trans)
+    public static void TweenOpenWithScale(Transform trans)
     {
         float scale=1;
 
         trans.localScale=new Vector3(0,0,0);
         trans.gameObject.SetActive(true);
-        trans.DOScale(new Vector3(scale,scale,scale),0.5f);
+        Tweener tween= trans.DOScale(new Vector3(scale,scale,scale),0.5f);
+        tween.SetUpdate(true);
 
     }
-    public void TweenCloseWithScale(Transform trans)
+    public static  void TweenCloseWithScale(Transform trans)
     {
         float scale=1;
 
-       
-        trans.DOScale(new Vector3(0,0,0),0.5f).OnComplete(()=>{trans.gameObject.SetActive(false);trans.localScale=new Vector3(scale,scale,scale);});
+
+        Tweener tween = trans.DOScale(new Vector3(0,0,0),0.5f).OnComplete(()=>{trans.gameObject.SetActive(false);trans.localScale=new Vector3(scale,scale,scale);});
+        tween.SetUpdate(true);
+
     }
 
     public GameObject ChooseBoard;
